@@ -1,0 +1,61 @@
+package org.example.automentor.controller;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.example.automentor.dto.auth.*;
+import org.example.automentor.dto.email.EmailSentOtp;
+import org.example.automentor.dto.email.EmailVerifyOtpDto;
+import org.example.automentor.dto.user.UsersForgetPasswordDto;
+import org.example.automentor.service.AuthService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register/start")
+    public String startRegistration(@Valid @RequestBody EmailSentOtp sentOtp) {
+        return authService.startRegistration(sentOtp);
+    }
+
+    @PostMapping("/register/verify")
+    public String verifyOtp(@Valid @RequestBody EmailVerifyOtpDto verifyOtp) {
+        return authService.verifyOtp(verifyOtp);
+    }
+
+    @PostMapping("/register/finish")
+    public String finishRegister(@Valid @RequestBody RegisterFinishDto finishDto) {
+        return authService.finishRegister(finishDto);
+    }
+
+    @PostMapping("/password/reset")
+    public String resetPassword(@Valid @RequestBody UsersForgetPasswordDto forgetPassword) {
+        return authService.resetPassword(forgetPassword);
+    }
+
+    @PostMapping("/login")
+    public AuthResponseDto login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        return authService.login(loginRequestDto);
+    }
+
+    @PatchMapping("/logout")
+    @SecurityRequirement(name = "bearerAuth")
+    public String logout() {
+        return authService.logout();
+    }
+
+    @PostMapping("/delete")
+    @SecurityRequirement(name = "bearerAuth")
+    public String delete(@RequestBody LogoutRequestDto logoutRequestDto) {
+        return authService.delete(logoutRequestDto);
+    }
+
+    @PostMapping("refresh-token")
+    public AuthResponseDto refreshToken(@RequestBody RefreshTokenRequestDto requestDto) {
+        return authService.refreshToken(requestDto);
+    }
+}

@@ -1,0 +1,192 @@
+package org.example.automentor.service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.automentor.dto.auth.*;
+import org.example.automentor.dto.email.EmailSentOtp;
+import org.example.automentor.dto.email.EmailVerifyOtpDto;
+import org.example.automentor.dto.user.UsersForgetPasswordDto;
+import org.example.automentor.entity.RefreshToken;
+import org.example.automentor.entity.Users;
+import org.example.automentor.enums.UserStatus;
+import org.example.automentor.enums.UsersRole;
+import org.example.automentor.exceptions.*;
+import org.example.automentor.jwt.JwtUtil;
+import org.example.automentor.mapper.UsersMapper;
+import org.example.automentor.repository.OtpRepository;
+import org.example.automentor.repository.RefreshTokenRepository;
+import org.example.automentor.repository.UsersRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class AuthService {
+
+    private final UsersRepository usersRepository;
+    private final UsersMapper usersMapper;
+    private final OtpRepository otpRepository;
+    private final OtpService otpService;
+    private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtUtil jwtUtil;
+    
+    public String startRegistration(EmailSentOtp sentOtp) {
+
+        if (usersRepository.findByEmail(sentOtp.getEmail()).isPresent()) {
+            log.info("Used email added: {}", sentOtp.getEmail());
+            throw new AlreadyExistsException("Email is already in use!");
+        }
+
+        log.info("OTP sent to user: {}", sentOtp.getEmail());
+        return otpService.sendOtp(sentOtp.getEmail());
+    }
+
+    public String verifyOtp(EmailVerifyOtpDto verifyOtp) {
+        otpService.verifyOtp(verifyOtp.getEmail(), verifyOtp.getOtp());
+        return "OTP verified.";
+    }
+
+    public String finishRegister(RegisterFinishDto finishDto) {
+
+        if (!otpService.isVerified(finishDto.getEmail())){
+            log.error("OTP not verified!");
+            throw new BadRequestException("OTP not verified!");
+        }
+
+        Users user = usersMapper.toEntity(finishDto);
+        user.setPassword(passwordEncoder.encode(finishDto.getPassword()));
+        user.setUsersRole(UsersRole.USER);
+        user.setStatus(UserStatus.ACTIVE);
+
+        usersRepository.save(user);
+        otpService.removeOtp(finishDto.getEmail());
+
+        log.info("New user registered. \nEmail: {}", finishDto.getEmail());
+        return "Customer successfully registered.";
+    }
+
+    public String resetPassword(UsersForgetPasswordDto forgetPassword) {
+
+        var user = usersRepository.findByEmail(forgetPassword.getEmail())
+                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+
+        if (!forgetPassword.getNewPassword().equals(forgetPassword.getConfirmNewPassword())) {
+            log.warn("New password and confirm password do not match!");
+            throw new WrongPasswordException("newPassword and confirmNewPassword must be the same!");
+        }
+
+        if (passwordEncoder.matches(forgetPassword.getNewPassword(), user.getPassword())) {
+            log.warn("New password cannot be same as the old password!");
+            throw new WrongPasswordException("New password cannot be same as the old password!");
+        }
+
+        user.setPassword(passwordEncoder.encode(forgetPassword.getNewPassword()));
+        usersRepository.save(user);
+
+        otpService.removeOtp(user.getEmail());
+
+        log.info("Password updated successfully. \nUser ID: {}", user.getId());
+        return "Password updated successfully.";
+    }
+
+    public AuthResponseDto login(LoginRequestDto loginRequestDto) {
+        var user = usersRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(() -> new NotFoundException("User not found. Please register first."));
+
+        if (user.getUsersRole().equals(UsersRole.ADMIN)){
+            log.error("Admin must log in using the 'admin/login' method.");
+            throw new RoleNotMatchException("LOGIN_ERROR");
+        }
+
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
+            log.error("Password is Wrong!");
+            throw new WrongPasswordException("Password is Wrong!");
+        }
+
+        refreshTokenRepository.deleteByUser(user);
+
+        String accessToken = jwtUtil.generateAccessToken(loginRequestDto.getEmail());
+        String refreshTokenStr = jwtUtil.generateRefreshToken();
+
+        var refreshToken = RefreshToken.builder()
+                .token(refreshTokenStr)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusDays(30))
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        user.setStatus(UserStatus.ACTIVE);
+        usersRepository.save(user);
+        log.info("User login. \nUser ID: {}", user.getId());
+        return new AuthResponseDto(accessToken, refreshTokenStr);
+    }
+
+    public String logout() {
+        String currentEmail = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        var user = usersRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+
+        user.setStatus(UserStatus.ACTIVE);
+        usersRepository.save(user);
+
+        return "User logout. \nUserID: " + user.getId();
+    }
+
+    public String delete(LogoutRequestDto logoutRequestDto) {
+        var user = usersRepository.findByEmail(logoutRequestDto.getEmail())
+                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+
+        passwordEncoder.encode(logoutRequestDto.getPassword());
+
+        if (passwordEncoder.encode(logoutRequestDto.getPassword()).equals(user.getPassword())) {
+            usersRepository.delete(user);
+        }
+
+        return "User deleted. \nUserID: " + user.getId();
+    }
+
+    public AuthResponseDto refreshToken(RefreshTokenRequestDto requestDto) {
+        String oldToken = requestDto.getRefreshToken();
+
+        var token = refreshTokenRepository.findByToken(oldToken)
+                .orElseThrow(() -> {
+                    log.error("Refresh token not found!");
+                    return new NotFoundException("Refresh token not found!");
+                });
+
+        var user = token.getUser();
+
+        if (token.isRevoked() || token.getExpiryDate().isBefore(LocalDateTime.now())) {
+            log.info("Refresh token is invalid or expired. \nUser ID: {}", user.getId());
+            throw new BadRequestException("Refresh token is invalid or expired!");
+        }
+
+        String email = user.getEmail();
+
+        refreshTokenRepository.delete(token);
+
+        String newAccessToken = jwtUtil.generateAccessToken(email);
+        String newRefreshTokenStr = jwtUtil.generateRefreshToken();
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(newRefreshTokenStr)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusDays(30))
+                .revoked(false)
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        log.info("Token created. \nUser ID: {}", user.getId());
+        return new AuthResponseDto(newAccessToken, newRefreshTokenStr);
+    }
+}

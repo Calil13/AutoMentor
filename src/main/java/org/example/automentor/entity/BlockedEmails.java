@@ -23,7 +23,7 @@ public class BlockedEmails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_by_admin_id")
-    private User blockedByAdmin;
+    private Users blockedByAdmin;
 
     private String reason;
 }

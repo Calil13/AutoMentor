@@ -1,0 +1,76 @@
+package org.example.automentor.service;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.automentor.entity.OtpCode;
+import org.example.automentor.exceptions.BadRequestException;
+import org.example.automentor.exceptions.NotFoundException;
+import org.example.automentor.repository.OtpRepository;
+import org.springframework.mail.MailException;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class OtpService {
+
+    private final OtpRepository otpRepository;
+    private final EmailService emailService;
+
+    public String sendOtp(String email) {
+
+        otpRepository.deleteByEmail(email);
+
+        String code = String.valueOf((int)(Math.random() * 900000) + 100000);
+
+        OtpCode otp = OtpCode.builder()
+                .email(email)
+                .otp(code)
+                .expiresAt(LocalDateTime.now().plusMinutes(5))
+                .build();
+
+        otpRepository.save(otp);
+
+        try {
+            emailService.sendOtpEmail(email, code);
+        } catch (MailException e) {
+            throw new BadRequestException("Email is invalid or does not exist");
+        }
+
+        log.info("OTP sent successfully.");
+        return "OTP sent successfully.";
+    }
+
+    public void verifyOtp(String email, String Otp) {
+
+        OtpCode otp = otpRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("OTP not found!"));
+
+        if (otp.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("OTP has expired!");
+        }
+
+        if (!otp.getOtp().equals(Otp)) {
+            throw new BadRequestException("OTP is wrong!");
+        }
+
+        otp.setVerified(true);
+        otpRepository.save(otp);
+
+        log.info("OTP verified.");
+    }
+
+    public boolean isVerified(String email) {
+        return otpRepository.findByEmail(email)
+                .map(OtpCode::isVerified)
+                .orElse(false);
+    }
+
+    public void removeOtp(String email) {
+        otpRepository.deleteByEmail(email);
+    }
+}

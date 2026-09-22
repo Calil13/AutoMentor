@@ -21,11 +21,8 @@ public class RoadSign {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "category")
     private RoadSignCategory category;
-
-    @Column(nullable = false)
-    private String imageUrl;
 
     @Column(columnDefinition = "TEXT", name = "description")
     private String description;
