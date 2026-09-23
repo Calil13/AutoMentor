@@ -27,7 +27,17 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //
+                .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/auth/login",
+                        "/auth/register/**",
+                        "/auth/refresh-token",
+                        "/auth/password/**",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**")
+                .permitAll()
+                )
+
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, accessDeniedException) ->
                                 GlobalExceptionHandler.unauthorizedResponse(response)

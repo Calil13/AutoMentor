@@ -95,6 +95,7 @@ public class AuthService {
         return "Password updated successfully.";
     }
 
+    @Transactional
     public AuthResponseDto login(LoginRequestDto loginRequestDto) {
         var user = usersRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("User not found. Please register first."));
@@ -152,6 +153,7 @@ public class AuthService {
         return new AuthResponseDto(adminAccessToken, null);
     }
 
+    @Transactional
     public String logout() {
         String currentEmail = SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -166,6 +168,7 @@ public class AuthService {
         return "User logout. \nUserID: " + user.getId();
     }
 
+    @Transactional
     public String delete(LogoutRequestDto logoutRequestDto) {
         var user = usersRepository.findByEmail(logoutRequestDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));

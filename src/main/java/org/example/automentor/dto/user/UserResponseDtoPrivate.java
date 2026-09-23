@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDtoPrivate {
 
-    private String name;
+    private String fullName;
     private String email;
-    private String phone;
 }
