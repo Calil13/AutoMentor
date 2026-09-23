@@ -1,5 +1,6 @@
 package org.example.automentor.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.automentor.dto.auth.*;
@@ -38,7 +39,7 @@ public class AuthService {
     public String startRegistration(EmailSentOtp sentOtp) {
 
         if (usersRepository.findByEmail(sentOtp.getEmail()).isPresent()) {
-            log.info("Used email added: {}", sentOtp.getEmail());
+            log.warn("Used email added: {}", sentOtp.getEmail());
             throw new AlreadyExistsException("Email is already in use!");
         }
 
@@ -125,6 +126,30 @@ public class AuthService {
         usersRepository.save(user);
         log.info("User login. \nUser ID: {}", user.getId());
         return new AuthResponseDto(accessToken, refreshTokenStr);
+    }
+
+    @Transactional
+    public AuthResponseDto adminLogin(String email, String password) {
+
+        var user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Admin not found!"));
+
+        if (user.getUsersRole() != UsersRole.ADMIN) {
+            log.error("You are not admin!");
+            throw new AccessDeniedException("You are not admin!");
+        }
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            log.error("Password is wrong!");
+            throw new WrongPasswordException("Password is wrong!");
+        }
+
+        String adminAccessToken = jwtUtil.generateAdminAccessToken(email);
+
+        user.setStatus(UserStatus.ACTIVE);
+        usersRepository.save(user);
+
+        return new AuthResponseDto(adminAccessToken, null);
     }
 
     public String logout() {

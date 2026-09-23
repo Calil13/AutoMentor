@@ -42,6 +42,11 @@ public class AuthController {
         return authService.login(loginRequestDto);
     }
 
+    @PostMapping("/admin/login")
+    public AuthResponseDto adminLogin(@Valid @RequestBody AdminLoginRequestDto request) {
+        return authService.adminLogin(request.getEmail(), request.getPassword());
+    }
+
     @PatchMapping("/logout")
     @SecurityRequirement(name = "bearerAuth")
     public String logout() {

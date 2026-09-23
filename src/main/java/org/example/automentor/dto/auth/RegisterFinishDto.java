@@ -13,9 +13,6 @@ public class RegisterFinishDto {
 
     private String name;
 
-    @ValidPhone
-    private String phone;
-
     @ValidPassword
     private String password;
 }
