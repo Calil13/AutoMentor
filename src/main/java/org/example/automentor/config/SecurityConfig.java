@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users/user-info/private").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/users/update/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/chapter/create-chapter").hasAnyAuthority("ROLE_ADMIN")
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
