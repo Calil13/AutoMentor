@@ -3,6 +3,7 @@ package org.example.automentor.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.automentor.dto.user.UserCheckPasswordDto;
 import org.example.automentor.dto.user.UserResponseDtoPrivate;
 import org.example.automentor.dto.user.UsersUpdateNameDto;
 import org.example.automentor.dto.user.UsersUpdatePasswordDto;
@@ -32,5 +33,11 @@ public class UserController {
     @SecurityRequirement(name = "bearerAuth")
     public String updatePassword(@Valid @RequestBody UsersUpdatePasswordDto updatePassword) {
         return usersService.updatePassword(updatePassword);
+    }
+
+    @DeleteMapping("/delete")
+    @SecurityRequirement(name = "bearerAuth")
+    public String deleteAccount(@RequestBody UserCheckPasswordDto checkPassword) {
+        return usersService.deleteAccount(checkPassword);
     }
 }
