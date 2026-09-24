@@ -20,6 +20,6 @@ public class Chapter {
     @Column(nullable = false)
     private String chapter_title;
 
-    @Column(nullable = false, name = "description")
+    @Column(nullable = false, columnDefinition = "TEXT",name = "description")
     private String description;
 }
