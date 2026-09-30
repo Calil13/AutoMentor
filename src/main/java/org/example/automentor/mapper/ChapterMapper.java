@@ -1,5 +1,6 @@
 package org.example.automentor.mapper;
 
+import org.example.automentor.dto.chapter.ChapterResponseDto;
 import org.example.automentor.dto.chapter.ChaptersResponseDto;
 import org.example.automentor.dto.chapter.CreateChapterDto;
 import org.example.automentor.entity.Chapter;
@@ -12,4 +13,5 @@ public interface ChapterMapper {
 
     Chapter toEntity(CreateChapterDto createChapterDto);
     ChaptersResponseDto toDtoList(List<Chapter> chapters);
+    ChapterResponseDto toDto(Chapter chapter);
 }

@@ -2,13 +2,11 @@ package org.example.automentor.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.example.automentor.dto.chapter.ChapterResponseDto;
 import org.example.automentor.dto.chapter.ChaptersResponseDto;
 import org.example.automentor.dto.chapter.CreateChapterDto;
 import org.example.automentor.service.ChapterService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,10 +15,15 @@ public class ChapterController {
 
     private ChapterService chapterService;
 
-    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/chapters-category")
     public ChaptersResponseDto getChapters() {
+        return chapterService.getChapters();
+    }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("/chapters-category/{id}")
+    public ChapterResponseDto getChapter(@PathVariable Long id) {
+        return chapterService.getChapter(id);
     }
 
     @SecurityRequirement(name = "bearerAuth")
