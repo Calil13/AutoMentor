@@ -34,10 +34,10 @@ public class ChapterService {
         usersRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
 
-        var chaptersNames = chapterRepository.findAll();
-
-         return chapterMapper.toDtoList(chaptersNames);
+        return chapterMapper.toDtoList(chapterRepository.findAll());
     }
+
+
 
     public void createChapter(CreateChapterDto createChapterDto) {
         String currentEmail = SecurityContextHolder.getContext()

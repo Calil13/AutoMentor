@@ -18,7 +18,7 @@ public class Chapter {
     private Long id;
 
     @Column(nullable = false)
-    private String chapter_title;
+    private String chapterTitle;
 
     @Column(nullable = false, columnDefinition = "TEXT",name = "description")
     private String description;
