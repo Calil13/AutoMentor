@@ -23,13 +23,17 @@ public class Images {
 
     @ManyToOne
     @JoinColumn(name = "chapter_images_url")
-    private Chapter chapterImagesUrl;
+    private Chapter chapterId;
 
     @ManyToOne
     @JoinColumn(name = "questions_image_url")
-    private Question questionsImageUrl;
+    private Question questionsId;
 
     @OneToOne
-    @JoinColumn(nullable = false, name = "roadSign_img_url")
-    private RoadSign roadSignImgUrl;
+    @JoinColumn(name = "road_sign_img_url")
+    private RoadSign roadSignId;
+
+    @OneToOne
+    @JoinColumn(name = "answer_image_id")
+    private Images answerId;
 }

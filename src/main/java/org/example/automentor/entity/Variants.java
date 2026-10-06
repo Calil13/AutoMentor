@@ -25,10 +25,6 @@ public class Variants {
     @Column(name = "txt")
     private String txt;
 
-    @OneToOne
-    @JoinColumn(name = "answer_image_id")
-    private Images answer_img_url;
-
     @Column(name = "is_correct")
     private Boolean is_correct;
 }
