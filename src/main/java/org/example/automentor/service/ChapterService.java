@@ -1,5 +1,6 @@
 package org.example.automentor.service;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.automentor.dto.chapter.ChapterResponseDto;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,11 +26,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChapterService {
 
-    private UsersRepository usersRepository;
-    private ChapterMapper chapterMapper;
-    private ChapterRepository chapterRepository;
+    private final UsersRepository usersRepository;
+    private final ChapterMapper chapterMapper;
+    private final ChapterRepository chapterRepository;
 
-    public ChaptersResponseDto getChapters() {
+    public List<ChaptersResponseDto> getChapters() {
         log.info("Chapters returned");
         return chapterMapper.toDtoList(chapterRepository.findAll());
     }
@@ -46,7 +48,7 @@ public class ChapterService {
         var user = usersRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
 
-        if (!user.getUsersRole().equals(UsersRole.ADMIN)){
+        if (!user.getUsersRole().equals(UsersRole.ADMIN)) {
             throw new AccessDeniedException("You are not admin.");
         }
 

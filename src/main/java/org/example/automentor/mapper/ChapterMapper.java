@@ -12,6 +12,6 @@ import java.util.List;
 public interface ChapterMapper {
 
     Chapter toEntity(CreateChapterDto createChapterDto);
-    ChaptersResponseDto toDtoList(List<Chapter> chapters);
+    List<ChaptersResponseDto> toDtoList(List<Chapter> chapters);
     ChapterResponseDto toDto(Chapter chapter);
 }

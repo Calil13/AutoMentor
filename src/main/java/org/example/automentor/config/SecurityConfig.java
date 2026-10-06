@@ -33,6 +33,7 @@ public class SecurityConfig {
                         "/auth/register/**",
                         "/auth/refresh-token",
                         "/auth/password/**",
+                        "/chapter/chapters-category",
                         "/swagger-ui/**",
                         "/v3/api-docs/**")
                         .permitAll()
@@ -42,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/users/update/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/chapter/create-chapter").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/chapter/chapter-category/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
