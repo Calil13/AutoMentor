@@ -36,4 +36,8 @@ public class Images {
     @OneToOne
     @JoinColumn(name = "answer_image_id")
     private Images answerId;
+
+    public Images(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

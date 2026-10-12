@@ -1,17 +1,22 @@
 package org.example.automentor.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.automentor.dto.image.ImageDto;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chapter")
 public class ImagesController {
 
-    @PostMapping("/add-image")
-    public void addImage() {
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping(value = "add-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<ImageDto> addImage(@PathVariable Long id, @RequestPart("files") List<MultipartFile> files) {
 
     }
 }
