@@ -25,7 +25,7 @@ public class ImagesService {
 
     private final ImageRepository imageRepository;
 
-    public List<ImageDto> uploadImage(Long id, List<MultipartFile> files) {
+    public List<ImageDto> addImage(Long id, List<MultipartFile> files) {
 
         List<Images> savedImages = new ArrayList<>();
 

@@ -3,6 +3,7 @@ package org.example.automentor.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.example.automentor.dto.image.ImageDto;
+import org.example.automentor.service.ImagesService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,9 +15,11 @@ import java.util.List;
 @RequestMapping("/chapter")
 public class ImagesController {
 
+    private final ImagesService imagesService;
+
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "add-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<ImageDto> addImage(@PathVariable Long id, @RequestPart("files") List<MultipartFile> files) {
-
+        return imagesService.addImage(id, files);
     }
 }
