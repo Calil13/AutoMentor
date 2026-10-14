@@ -3,6 +3,7 @@ package org.example.automentor.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.example.automentor.dto.image.ImageDto;
+import org.example.automentor.enums.ImageType;
 import org.example.automentor.service.ImagesService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,14 @@ public class ImagesController {
     private final ImagesService imagesService;
 
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping(value = "add-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<ImageDto> addImage(@PathVariable Long id, @RequestPart("files") List<MultipartFile> files) {
-        return imagesService.addImage(id, files);
+    @PostMapping(value = "/add-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<ImageDto> addImage(@PathVariable Long id, @RequestPart("files") List<MultipartFile> files, ImageType imageType) {
+        return imagesService.addImage(id, files, imageType);
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("/delete-img/{id}")
+    public String deleteImage(@PathVariable Long id) {
+        return imagesService.deleteImage(id);
     }
 }

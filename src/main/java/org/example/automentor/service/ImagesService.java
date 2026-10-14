@@ -6,9 +6,11 @@ import org.example.automentor.dto.image.ImageDto;
 import org.example.automentor.entity.*;
 import org.example.automentor.enums.ImageType;
 import org.example.automentor.exceptions.NotFoundException;
+import org.example.automentor.exceptions.UnexpectedException;
 import org.example.automentor.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -99,5 +101,28 @@ public class ImagesService {
         return savedImages.stream()
                 .map(img -> new ImageDto(img.getId(), img.getImageUrl()))
                 .collect(Collectors.toList());
+    }
+
+    public String deleteImage(Long id) {
+        Images image = imageRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("IMAGE_NOT_FOUND"));
+
+        Path fullPath = Paths.get(uploadPath)
+                .resolve(image.getImageUrl().replace("/uploads/", ""))
+                .normalize();
+
+        try {
+            if (Files.exists(fullPath)) {
+                Files.delete(fullPath);
+            }
+        } catch (Exception e) {
+            log.error("An error occurred while deleting the file!");
+            throw new UnexpectedException("An error occurred while deleting the file: " + fullPath);
+        }
+
+        imageRepository.delete(image);
+
+        log.info("Image deleted successfully. \nID: {}", id);
+        return "Image deleted successfully.";
     }
 }
