@@ -34,11 +34,11 @@ public class Images {
     @JoinColumn(name = "questions_id")
     private Question questionsId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "road_sign_id")
     private RoadSign roadSignId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "variants_id")
     private Variants variantsId;
 

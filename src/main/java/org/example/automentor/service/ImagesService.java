@@ -3,16 +3,10 @@ package org.example.automentor.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.automentor.dto.image.ImageDto;
-import org.example.automentor.entity.Chapter;
-import org.example.automentor.entity.Images;
-import org.example.automentor.entity.Question;
-import org.example.automentor.entity.RoadSign;
+import org.example.automentor.entity.*;
 import org.example.automentor.enums.ImageType;
 import org.example.automentor.exceptions.NotFoundException;
-import org.example.automentor.repository.ChapterRepository;
-import org.example.automentor.repository.ImageRepository;
-import org.example.automentor.repository.QuestionRepository;
-import org.example.automentor.repository.RoadSignRepository;
+import org.example.automentor.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +34,7 @@ public class ImagesService {
     private final ChapterRepository chapterRepository;
     private final QuestionRepository questionRepository;
     private final RoadSignRepository roadSignRepository;
+    private final VariantsRepository variantsRepository;
 
     public List<ImageDto> addImage(Long id, List<MultipartFile> files, ImageType imageType) {
 
@@ -48,23 +43,24 @@ public class ImagesService {
         Chapter chapter = null;
         Question question = null;
         RoadSign roadSign = null;
+        Variants variants = null;
 
         switch (imageType) {
             case CHAPTER -> chapter = chapterRepository.findById(id)
                     .orElseThrow(() ->
-                            new NotFoundException("Chapter not found"));
+                            new NotFoundException("CHAPTER_NOT_FOUND"));
 
             case QUESTION -> question = questionRepository.findById(id)
                     .orElseThrow(() ->
-                            new NotFoundException("Question not found"));
+                            new NotFoundException("QUESTION_NOT_FOUND"));
 
             case ROAD_SIGN -> roadSign = roadSignRepository.findById(id)
                     .orElseThrow(() ->
-                            new NotFoundException("Road sign not found"));
+                            new NotFoundException("ROAD_SIGN_NOT_FOUND"));
 
-            case ANSWER -> throw new UnsupportedOperationException(
-                    "Answer image relation needs to be defined"
-            );
+            case VARIANTS -> variants = variantsRepository.findById(id)
+                    .orElseThrow(() ->
+                            new NotFoundException("VARIANT_NOT_FOUND"));
         }
 
         for (MultipartFile file : files) {
@@ -89,7 +85,7 @@ public class ImagesService {
                     case CHAPTER -> image.setChapterId(chapter);
                     case QUESTION -> image.setQuestionsId(question);
                     case ROAD_SIGN -> image.setRoadSignId(roadSign);
-                    case ANSWER -> throw new IllegalStateException();
+                    case VARIANTS -> image.setVariantsId(variants);
                 }
 
                 savedImages.add(imageRepository.save(image));
