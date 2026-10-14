@@ -18,6 +18,11 @@ public class ImagesController {
 
     private final ImagesService imagesService;
 
+    @GetMapping("/get-image/{id}")
+    public List<ImageDto> getImages(@PathVariable Long id) {
+        return imagesService.getImages(id);
+    }
+
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/add-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<ImageDto> addImage(@PathVariable Long id, @RequestPart("files") List<MultipartFile> files, ImageType imageType) {

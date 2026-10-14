@@ -38,6 +38,18 @@ public class ImagesService {
     private final RoadSignRepository roadSignRepository;
     private final VariantsRepository variantsRepository;
 
+    public List<ImageDto> getImages(Long id) {
+        List<Images> images = imageRepository.findByRoadSignId(id);
+
+        if (images.isEmpty()) {
+            log.warn("Images not found for roadSign with ID {}", id);
+        }
+
+        return images.stream()
+                .map(img -> new ImageDto(img.getId(), img.getImageUrl()))
+                .collect(Collectors.toList());
+    }
+
     public List<ImageDto> addImage(Long id, List<MultipartFile> files, ImageType imageType) {
 
         List<Images> savedImages = new ArrayList<>();
