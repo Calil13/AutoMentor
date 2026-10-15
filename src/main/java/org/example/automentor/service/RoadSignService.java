@@ -1,0 +1,31 @@
+package org.example.automentor.service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.automentor.dto.roadSign.RoadSignCategoryResponseDto;
+import org.example.automentor.exceptions.NotFoundException;
+import org.example.automentor.exceptions.UnexpectedException;
+import org.example.automentor.mapper.RoadSignCategoryMapper;
+import org.example.automentor.repository.RoadSignCategoryRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class RoadSignService {
+
+    private final RoadSignCategoryRepository roadSignCategoryRepository;
+    private final RoadSignCategoryMapper roadSignCategoryMapper;
+
+    public List<RoadSignCategoryResponseDto> getCategories() {
+        var categories = roadSignCategoryRepository.findAll();
+
+        if (categories.isEmpty()) {
+            throw new NotFoundException("ROAD_SIGN_CATEGORY_NOT_FOUND");
+        }
+
+        return roadSignCategoryMapper.toDtoList(categories);
+    }
+}

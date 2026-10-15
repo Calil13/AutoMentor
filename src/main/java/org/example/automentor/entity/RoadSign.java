@@ -2,10 +2,9 @@ package org.example.automentor.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.automentor.enums.RoadSignCategory;
 
 @Entity
-@Table(name = "road_signs")
+@Table(name = "road_sign")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,13 +16,10 @@ public class RoadSign {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "name")
-    private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "category")
-    private RoadSignCategory category;
-
-    @Column(columnDefinition = "TEXT", name = "description")
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private RoadSignCategory category;
 }

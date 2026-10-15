@@ -44,6 +44,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/users/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/chapter/create-chapter").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/chapter/chapter-category/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/image/add-image/").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/image/delete-img/").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/image/get-image/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling

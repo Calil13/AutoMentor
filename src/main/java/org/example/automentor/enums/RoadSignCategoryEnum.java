@@ -1,0 +1,11 @@
+package org.example.automentor.enums;
+
+public enum RoadSignCategoryEnum {
+    ADDITIONAL_INFORMATION_SIGNS,
+    INFORMATIVE_INDICATIVE_SIGNS,
+    MANDATORY_DIRECTION_SIGNS,
+    PRIORITY_SIGNS,
+    PROHIBITION_SIGNS,
+    SERVICE_SIGNS,
+    WARNING_SIGNS
+}

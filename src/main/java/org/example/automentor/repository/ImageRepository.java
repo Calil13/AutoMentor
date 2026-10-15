@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Images, Long> {
     List<Images> findByChapterId(Long chapterId);
-    List<Images> findByQuestionId(Long questionId);
+    List<Images> findByQuestionsId(Long questionsId);
     List<Images> findByRoadSignId(Long roadSignId);
-    List<Images> findByAnswerId(Long answerId);
+    List<Images> findByVariantsId(Long answerId);
 }

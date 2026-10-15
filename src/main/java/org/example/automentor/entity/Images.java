@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.automentor.enums.ImageType;
 
-import java.util.List;
-
 @Entity
 @Table(name = "images")
 @Data
@@ -28,19 +26,19 @@ public class Images {
 
     @ManyToOne
     @JoinColumn(name = "chapter_id")
-    private Chapter chapterId;
+    private Chapter chapter;
 
     @ManyToOne
     @JoinColumn(name = "questions_id")
-    private Question questionsId;
+    private Question questions;
 
     @ManyToOne
     @JoinColumn(name = "road_sign_id")
-    private RoadSign roadSignId;
+    private RoadSign roadSign;
 
     @ManyToOne
     @JoinColumn(name = "variants_id")
-    private Variants variantsId;
+    private Variants variants;
 
     public Images(String imageUrl) {
         this.imageUrl = imageUrl;

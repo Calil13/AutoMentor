@@ -10,10 +10,8 @@ import org.example.automentor.exceptions.UnexpectedException;
 import org.example.automentor.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -96,10 +94,10 @@ public class ImagesService {
                 image.setImageType(imageType);
 
                 switch (imageType) {
-                    case CHAPTER -> image.setChapterId(chapter);
-                    case QUESTION -> image.setQuestionsId(question);
-                    case ROAD_SIGN -> image.setRoadSignId(roadSign);
-                    case VARIANTS -> image.setVariantsId(variants);
+                    case CHAPTER -> image.setChapter(chapter);
+                    case QUESTION -> image.setQuestions(question);
+                    case ROAD_SIGN -> image.setRoadSign(roadSign);
+                    case VARIANTS -> image.setVariants(variants);
                 }
 
                 savedImages.add(imageRepository.save(image));
