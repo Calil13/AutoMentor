@@ -35,7 +35,8 @@ public class SecurityConfig {
                         "/auth/password/**",
                         "/chapter/chapters-category",
                         "/swagger-ui/**",
-                        "/v3/api-docs/**")
+                        "/v3/api-docs/**",
+                        "road-sign/get-category")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
@@ -47,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/image/add-image/").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/image/delete-img/").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/image/get-image/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "road-sign/get").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling

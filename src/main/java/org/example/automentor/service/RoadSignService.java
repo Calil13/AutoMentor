@@ -3,10 +3,17 @@ package org.example.automentor.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.automentor.dto.roadSign.RoadSignCategoryResponseDto;
+import org.example.automentor.dto.roadSign.RoadSignResponseDto;
 import org.example.automentor.exceptions.NotFoundException;
 import org.example.automentor.exceptions.UnexpectedException;
 import org.example.automentor.mapper.RoadSignCategoryMapper;
 import org.example.automentor.repository.RoadSignCategoryRepository;
+import org.example.automentor.repository.RoadSignRepository;
+import org.example.automentor.repository.UsersRepository;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoadSignService {
 
+    private final UsersRepository usersRepository;
+    private final RoadSignRepository roadSignRepository;
     private final RoadSignCategoryRepository roadSignCategoryRepository;
     private final RoadSignCategoryMapper roadSignCategoryMapper;
 
@@ -27,5 +36,18 @@ public class RoadSignService {
         }
 
         return roadSignCategoryMapper.toDtoList(categories);
+    }
+
+    public Page<RoadSignResponseDto> getRoadSigns(Pageable pageable) {
+        String currentEmail = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        var user = usersRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+
+        var roadSign = roadSignRepository.findAll(pageable);
+
+
     }
 }
