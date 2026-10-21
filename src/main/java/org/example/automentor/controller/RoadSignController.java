@@ -31,6 +31,6 @@ public class RoadSignController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/get")
     public Page<RoadSignResponseDto> getRoadSigns(@ParameterObject Pageable pageable) {
-
+        return roadSignService.getRoadSigns(pageable);
     }
 }

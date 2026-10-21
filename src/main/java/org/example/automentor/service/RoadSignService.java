@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.automentor.dto.roadSign.RoadSignCategoryResponseDto;
 import org.example.automentor.dto.roadSign.RoadSignResponseDto;
+import org.example.automentor.entity.RoadSign;
 import org.example.automentor.exceptions.NotFoundException;
 import org.example.automentor.exceptions.UnexpectedException;
 import org.example.automentor.mapper.RoadSignCategoryMapper;
+import org.example.automentor.mapper.RoadSignMapper;
 import org.example.automentor.repository.RoadSignCategoryRepository;
 import org.example.automentor.repository.RoadSignRepository;
 import org.example.automentor.repository.UsersRepository;
@@ -25,6 +27,7 @@ public class RoadSignService {
 
     private final UsersRepository usersRepository;
     private final RoadSignRepository roadSignRepository;
+    private final RoadSignMapper roadSignMapper;
     private final RoadSignCategoryRepository roadSignCategoryRepository;
     private final RoadSignCategoryMapper roadSignCategoryMapper;
 
@@ -43,11 +46,11 @@ public class RoadSignService {
                 .getAuthentication()
                 .getName();
 
-        var user = usersRepository.findByEmail(currentEmail)
+        usersRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
 
-        var roadSign = roadSignRepository.findAll(pageable);
+        Page<RoadSign> roadSign = roadSignRepository.findAll(pageable);
 
-
+        return roadSign.map(roadSignMapper::toDto);
     }
 }
