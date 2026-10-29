@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.automentor.enums.RoadSignCategoryEnum;
 
 @Data
 @Builder
@@ -13,5 +12,5 @@ import org.example.automentor.enums.RoadSignCategoryEnum;
 public class RoadSignCategoryResponseDto {
 
     private Long id;
-    private RoadSignCategoryEnum roadSignCategory;
+    private String categoryName;
 }

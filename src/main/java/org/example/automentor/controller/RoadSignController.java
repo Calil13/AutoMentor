@@ -23,14 +23,14 @@ public class RoadSignController {
 
     private final RoadSignService roadSignService;
 
-    @GetMapping("/get-category")
+    @GetMapping("/categories")
     public List<RoadSignCategoryResponseDto> getCategories() {
         return roadSignService.getCategories();
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("/get")
-    public Page<RoadSignResponseDto> getRoadSigns(@ParameterObject Pageable pageable) {
-        return roadSignService.getRoadSigns(pageable);
+    @GetMapping("/category/{categoryId}")
+    public Page<RoadSignResponseDto> getRoadSigns(@PathVariable Long categoryId, @ParameterObject Pageable pageable) {
+        return roadSignService.getRoadSigns(categoryId, pageable);
     }
 }

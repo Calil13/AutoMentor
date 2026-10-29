@@ -32,7 +32,7 @@ public class Images {
     @JoinColumn(name = "questions_id")
     private Question questions;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "road_sign_id")
     private RoadSign roadSign;
 

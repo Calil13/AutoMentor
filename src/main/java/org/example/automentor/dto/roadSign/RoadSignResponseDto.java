@@ -1,6 +1,9 @@
 package org.example.automentor.dto.roadSign;
 
 import lombok.*;
+import org.example.automentor.entity.Images;
+import org.example.automentor.entity.RoadSign;
+import org.example.automentor.entity.RoadSignCategory;
 
 @Builder
 @Data
@@ -9,7 +12,6 @@ import lombok.*;
 public class RoadSignResponseDto {
 
     private Long id;
-    private String name;
+    private RoadSign roadSign;
     private String imageUrl;
-    private String description;
 }
