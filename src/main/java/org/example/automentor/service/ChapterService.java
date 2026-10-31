@@ -30,12 +30,14 @@ public class ChapterService {
     private final ChapterMapper chapterMapper;
     private final ChapterRepository chapterRepository;
 
-    public List<ChaptersResponseDto> getChapters() {
-        log.info("Chapters returned");
-        return chapterMapper.toDtoList(chapterRepository.findAll());
-    }
-
     public ChapterResponseDto getChapter(Long id) {
+        String currentEmail = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        usersRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+
         log.info("Chapter returned.");
         return chapterMapper.toDto(chapterRepository.getReferenceById(id));
     }

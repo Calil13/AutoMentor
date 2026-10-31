@@ -11,7 +11,7 @@ public class RegisterFinishDto {
     @ValidEmail
     private String email;
 
-    private String name;
+    private String fullName;
 
     @ValidPassword
     private String password;

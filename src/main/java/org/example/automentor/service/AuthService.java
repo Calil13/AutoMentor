@@ -61,6 +61,7 @@ public class AuthService {
 
         Users user = usersMapper.toEntity(finishDto);
         user.setPassword(passwordEncoder.encode(finishDto.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
         user.setUsersRole(UsersRole.USER);
         user.setStatus(UserStatus.ACTIVE);
 

@@ -18,13 +18,8 @@ public class ChapterController {
 
     private final ChapterService chapterService;
 
-    @GetMapping("/chapters-category")
-    public List<ChaptersResponseDto> getChapters() {
-        return chapterService.getChapters();
-    }
-
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("/chapter-category/{id}")
+    @GetMapping("/category/{id}")
     public ChapterResponseDto getChapter(@PathVariable Long id) {
         return chapterService.getChapter(id);
     }

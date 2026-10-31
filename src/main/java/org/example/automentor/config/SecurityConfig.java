@@ -43,12 +43,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/users/update/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/chapter/create-chapter").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/chapter/chapter-category/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/chapter/chapters-category/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/chapter/category/*").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/image/add-image/").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/image/delete-img/").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/image/get-image/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/road-sign/category").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/road-sign").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/road-sign/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/road-sign/category/*").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
