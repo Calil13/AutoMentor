@@ -6,7 +6,6 @@ import org.example.automentor.entity.Images;
 import org.example.automentor.entity.RoadSign;
 import org.example.automentor.entity.RoadSignCategory;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
