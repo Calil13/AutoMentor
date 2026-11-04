@@ -42,6 +42,20 @@ public class ChapterService {
         return chapterMapper.toDto(chapterRepository.getReferenceById(id));
     }
 
+    public ChaptersResponseDto getChaptersName() {
+        String currentEmail = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        usersRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+
+        var chaptersName = chapterRepository.findAllTitles();
+
+        log.info("Chapters Title returned.");
+        return chapterMapper.toDto(chaptersName);
+    }
+
     public void createChapter(CreateChapterDto createChapterDto) {
         String currentEmail = SecurityContextHolder.getContext()
                 .getAuthentication()

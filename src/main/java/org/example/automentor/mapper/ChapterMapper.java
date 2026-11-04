@@ -5,6 +5,7 @@ import org.example.automentor.dto.chapter.ChaptersResponseDto;
 import org.example.automentor.dto.chapter.CreateChapterDto;
 import org.example.automentor.entity.Chapter;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -12,6 +13,12 @@ import java.util.List;
 public interface ChapterMapper {
 
     Chapter toEntity(CreateChapterDto createChapterDto);
-    List<ChaptersResponseDto> toDtoList(List<Chapter> chapters);
+
+    default ChaptersResponseDto toDto(List<String> titles) {
+        return ChaptersResponseDto.builder()
+                .chapterTitle(titles)
+                .build();
+    }
+
     ChapterResponseDto toDto(Chapter chapter);
 }

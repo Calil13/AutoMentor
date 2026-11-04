@@ -13,6 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ChaptersResponseDto {
 
-    private Long id;
-    private String chapterTitle;
+    private List<String> chapterTitle;
 }

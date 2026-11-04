@@ -25,6 +25,12 @@ public class ChapterController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/chapters-name")
+    public ChaptersResponseDto getChaptersName() {
+        return chapterService.getChaptersName();
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/create-chapter")
     public void createChapter(@RequestBody CreateChapterDto createChapterDto) {
         chapterService.createChapter(createChapterDto);
