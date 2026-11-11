@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.automentor.dto.variants.VariantResponseDto;
 import org.example.automentor.entity.Variants;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public class QuestionResponseDto {
 
     private List<String> imgUrl;
     private String txt;
-    private List<Variants> variants;
+    private List<VariantResponseDto> variants;
 }

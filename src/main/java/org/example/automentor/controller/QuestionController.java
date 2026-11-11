@@ -17,8 +17,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("/chapter/{id}")
-    public List<QuestionResponseDto> getQuestionsForChapter(@PathVariable Long id) {
+    @GetMapping("/random")
+    public List<QuestionResponseDto> getRandomQuestions() {
 
     }
 }

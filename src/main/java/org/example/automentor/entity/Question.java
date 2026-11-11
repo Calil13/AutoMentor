@@ -28,10 +28,6 @@ public class Question {
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Variants> variants = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "chapter")
-    private Chapter chapter;
-
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

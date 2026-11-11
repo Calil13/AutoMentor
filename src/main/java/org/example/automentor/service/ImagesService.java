@@ -95,7 +95,7 @@ public class ImagesService {
 
                 switch (imageType) {
                     case CHAPTER -> image.setChapter(chapter);
-                    case QUESTION -> image.setQuestions(question);
+                    case QUESTION -> image.setQuestion(question);
                     case ROAD_SIGN -> image.setRoadSign(roadSign);
                     case VARIANTS -> image.setVariants(variants);
                 }
