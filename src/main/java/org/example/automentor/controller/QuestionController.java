@@ -19,6 +19,6 @@ public class QuestionController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/random")
     public List<QuestionResponseDto> getRandomQuestions() {
-
+        return questionService.getRandomQuestions();
     }
 }

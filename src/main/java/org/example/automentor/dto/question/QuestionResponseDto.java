@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class QuestionResponseDto {
 
-    private List<String> imgUrl;
     private String txt;
+    private List<String> imgUrl;
     private List<VariantResponseDto> variants;
 }

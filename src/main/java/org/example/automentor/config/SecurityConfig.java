@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/image/get-image/").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/road-sign/categories").permitAll()
                         .requestMatchers(HttpMethod.GET, "/road-sign/category/*").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/questions/random").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling

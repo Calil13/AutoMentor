@@ -12,6 +12,7 @@ public interface ImageRepository extends JpaRepository<Images, Long> {
     List<Images> findByChapterId(Long chapterId);
     List<Images> findByRoadSignId(Long roadSignId);
     List<Images> findByVariantsId(Long answerId);
-
     List<Images> findByRoadSign_IdIn(List<Long> roadSignId);
+    List<Images> findByQuestionIdIn(List<Long> questionIds);
+    List<Images> findByVariantsIdIn(List<Long> variantIds);
 }
