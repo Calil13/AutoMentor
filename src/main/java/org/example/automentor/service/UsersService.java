@@ -23,10 +23,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UsersService {
 
-    private UsersRepository usersRepository;
-    private UsersMapper usersMapper;
-    private PasswordEncoder passwordEncoder;
-    private RefreshTokenRepository refreshTokenRepository;
+    private final UsersRepository usersRepository;
+    private final UsersMapper usersMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public UserResponseDtoPrivate getUserInfoPrivate() {
         String currentEmail = SecurityContextHolder.getContext()
