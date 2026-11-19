@@ -1,5 +1,8 @@
 package org.example.automentor.service;
 
+import org.example.automentor.dto.chapter.ChapterResponseDto;
+import org.example.automentor.entity.Chapter;
+import org.example.automentor.entity.Users;
 import org.example.automentor.exceptions.NotFoundException;
 import org.example.automentor.mapper.ChapterMapper;
 import org.example.automentor.repository.ChapterRepository;
@@ -58,5 +61,36 @@ class ChapterServiceTest {
 
         verify(chapterRepository, never()).getReferenceById(any());
         verifyNoInteractions(chapterMapper);
+    }
+
+    @Test
+    void getChapter_whenUserFound_returnChapter() {
+        Long chapterId = 1L;
+        Users user = new Users();
+        Chapter chapter = new Chapter(chapterId, "Test Chapter Title", "Test Chapter Description");
+        ChapterResponseDto expectedResponse = ChapterResponseDto.builder()
+                .id(chapterId)
+                .chapterTitle("Test Chapter Title")
+                .description("Test Chapter Description")
+                .build();
+
+        when(usersRepository.findByEmail("test123@gmail.com"))
+                .thenReturn(Optional.of(user));
+        when(chapterRepository.getReferenceById(chapterId))
+                .thenReturn(chapter);
+        when(chapterMapper.toDto(chapter))
+                .thenReturn(expectedResponse);
+
+        ChapterResponseDto actualResponse = chapterService.getChapter(chapterId);
+
+        assertNotNull(actualResponse);
+        assertEquals(expectedResponse, actualResponse);
+        assertEquals(expectedResponse.getId(), actualResponse.getId());
+        assertEquals(expectedResponse.getChapterTitle(), actualResponse.getChapterTitle());
+        assertEquals(expectedResponse.getDescription(), actualResponse.getDescription());
+
+        verify(usersRepository).findByEmail("test123@gmail.com");
+        verify(chapterRepository).getReferenceById(chapterId);
+        verify(chapterMapper).toDto(chapter);
     }
 }
